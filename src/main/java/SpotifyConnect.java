@@ -6,10 +6,7 @@ import com.wrapper.spotify.exceptions.WebApiException;
 import com.wrapper.spotify.methods.ArtistSearchRequest;
 import com.wrapper.spotify.methods.TopTracksRequest;
 import com.wrapper.spotify.methods.authentication.ClientCredentialsGrantRequest;
-import com.wrapper.spotify.models.Artist;
-import com.wrapper.spotify.models.ClientCredentials;
-import com.wrapper.spotify.models.Page;
-import com.wrapper.spotify.models.Track;
+import com.wrapper.spotify.models.*;
 
 /**
  * @author aayush.saxena
@@ -19,11 +16,12 @@ public class SpotifyConnect {
     public static String CLIENT_ID = "0066307627c2459aaf0370e2c5949dc0";
     public static String CLIENT_SECRET = "b0800ef8fafa42c9a5b2d6de11a34879";
     public static Set<Artist> artistSet = new HashSet<Artist>();
+    public static Set<Track> trackSet = new HashSet<Track>();
 
     public static void main(String[] strings) throws IOException, WebApiException, InterruptedException, Exception {
 
-        //OCRRestAPI doc = new OCRRestAPI();
-        //doc.connectOCR("lolla_2017.jpg");
+        OCRRestAPI doc = new OCRRestAPI();
+        doc.connectOCR("acl.jpg");
 
         final Api api = Api.builder()
                 .clientId(CLIENT_ID)
@@ -37,17 +35,18 @@ public class SpotifyConnect {
         final ClientCredentials response = request.get();
 
         if(response != null) {
-            System.out.println("Successfully retrieved an access token! " + response.getAccessToken());
-            System.out.println("The access token expires in " + response.getExpiresIn() + " seconds");
+            //System.out.println("Successfully retrieved an access token! " + response.getAccessToken());
+            //System.out.println("The access token expires in " + response.getExpiresIn() + " seconds");
             api.setAccessToken(response.getAccessToken());
         } else {
             System.out.println("Something happened");
         }
 
-        //processDocument();
-        //searchArtistsFromFile(api);
-        //checkArtistSet();
+        processDocument();
+        searchArtistsFromFile(api);
+        checkArtistSet();
         findTopSongs(api);
+        displayPlaylist();
     }
 
     public static void processDocument() throws IOException {
@@ -98,9 +97,10 @@ public class SpotifyConnect {
         Scanner sc = new Scanner(file);
         int count = 0;
         String temp = "";
-        while(sc.hasNextLine()) {
+        System.out.println("Here is a list of artists that were found in the poster: ");
+        while(sc.hasNextLine() && count < 60) {
             String artist = sc.nextLine();
-            Thread.sleep(100);
+            Thread.sleep(300);
             searchArtists(api, artist);
             count++;
         }
@@ -135,10 +135,10 @@ public class SpotifyConnect {
             artistId.add(artist.getId());
             artistDetail.add(artist.getId() + ":" + artist.getName());
         }
-        System.out.println("Here are the Artists that were found: ");
+        //System.out.println("Here are the Artists that were found: ");
         for (String artist: artistName) {
             nameWriter.println(artist);
-            System.out.println(artist);
+            //System.out.println(artist);
         }
 
         for(String id: artistId) {
@@ -159,7 +159,7 @@ public class SpotifyConnect {
         Scanner sc = new Scanner(file);
         Map<String, List<Track>> topSongs = new HashMap<String, List<Track>>();
         System.out.println();
-        System.out.println("Here is a list of songs you should listen: ");
+        System.out.println("Here is a list of top songs you should listen: ");
         System.out.println();
         while(sc.hasNextLine()) {
             String artist = sc.nextLine();
@@ -182,11 +182,45 @@ public class SpotifyConnect {
 
     public static void displaySongs(String artistName, List<Track> topTracks) {
         System.out.print(artistName + ": [");
-        for(Track track: topTracks) {
+        for (Track track : topTracks) {
             System.out.print(track.getName());
+            trackSet.add(track);
             System.out.print(", ");
         }
         System.out.print("]");
+        System.out.println();
+    }
+
+    public static void displayPlaylist() throws FileNotFoundException {
+        System.out.println();
+        PrintWriter playlistWriter = new PrintWriter("acl-playlist.txt");
+        for(int i = 0; i < 50; i++) {
+            playlistWriter.print("- ");
+            System.out.print("- ");
+        }
+        playlistWriter.println();
+        System.out.println();
+        playlistWriter.println("Here's a playlist from the music festival:");
+        System.out.println("Here's a playlist from the music festival:");
+        System.out.println();
+        playlistWriter.println();
+        for(Track track : trackSet) {
+            System.out.print(track.getName() + " by ");
+            playlistWriter.print(track.getName() + " by ");
+            for(SimpleArtist artist : track.getArtists()) {
+                playlistWriter.print(artist.getName() + " ");
+                System.out.print(artist.getName() + " ");
+            }
+            playlistWriter.println();
+            System.out.println();
+        }
+
+        for(int i = 0; i < 50; i++) {
+            playlistWriter.print("- ");
+            System.out.print("- ");
+        }
+
+        playlistWriter.println();
         System.out.println();
     }
 }

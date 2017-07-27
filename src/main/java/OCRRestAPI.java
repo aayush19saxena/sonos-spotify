@@ -61,7 +61,7 @@ public class OCRRestAPI {
 
         int httpCode = connection.getResponseCode();
 
-        System.out.println("HTTP Response code: " + httpCode);
+        //System.out.println("HTTP Response code: " + httpCode);
 
         // Success request
         if (httpCode == HttpURLConnection.HTTP_OK)
@@ -92,27 +92,36 @@ public class OCRRestAPI {
 
     }
 
-    private static void PrintOCRResponse(String jsonResponse) throws ParseException, IOException
+    private static void PrintOCRResponse(String jsonResponse) throws ParseException, IOException, InterruptedException
     {
         // Parse JSON data
         JSONParser parser = new JSONParser();
         JSONObject jsonObj = (JSONObject)parser.parse(jsonResponse);
 
         // Get available pages
-        System.out.println("Available pages: " + jsonObj.get("AvailablePages"));
+        //System.out.println("Available pages: " + jsonObj.get("AvailablePages"));
 
         // get an array from the JSON object
         JSONArray text= (JSONArray)jsonObj.get("OCRText");
 
         //FileOutputStream outputStream = new FileOutputStream("/Users/aayush.saxena/Documents/workspace/lineups/festival.txt");
         PrintWriter writer = new PrintWriter("festival.txt");
+        System.out.println("Reading artists from the poster");
+        System.out.println();
 
+        for(int i = 0; i < 5; i++) {
+            Thread.sleep(200);
+            System.out.print("---");
+        }
+
+        System.out.println();
+        System.out.println();
         // For zonal OCR: OCRText[z][p]    z - zone, p - pages
         for(int i=0; i<text.size(); i++){
             System.out.println(" "+ text.get(i));
             writer.println(text.get(i));
         }
-
+        System.out.println();
         writer.close();
 
         // Output file URL
