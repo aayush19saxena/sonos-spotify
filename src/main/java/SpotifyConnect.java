@@ -17,10 +17,13 @@ import com.wrapper.spotify.models.Track;
  */
 public class SpotifyConnect {
     public static String CLIENT_ID = "0066307627c2459aaf0370e2c5949dc0";
-    public static String CLIENT_SECRET = "a6038211d7304138a27f3edcdc0e9db5";
+    public static String CLIENT_SECRET = "b0800ef8fafa42c9a5b2d6de11a34879";
     public static Set<Artist> artistSet = new HashSet<Artist>();
 
-    public static void main(String[] strings) throws IOException, WebApiException, InterruptedException {
+    public static void main(String[] strings) throws IOException, WebApiException, InterruptedException, Exception {
+
+        //OCRRestAPI doc = new OCRRestAPI();
+        //doc.connectOCR("lolla_2017.jpg");
 
         final Api api = Api.builder()
                 .clientId(CLIENT_ID)
@@ -41,9 +44,9 @@ public class SpotifyConnect {
             System.out.println("Something happened");
         }
 
-        processDocument();
-        searchArtistsFromFile(api);
-        checkArtistSet();
+        //processDocument();
+        //searchArtistsFromFile(api);
+        //checkArtistSet();
         findTopSongs(api);
     }
 
@@ -97,7 +100,7 @@ public class SpotifyConnect {
         String temp = "";
         while(sc.hasNextLine()) {
             String artist = sc.nextLine();
-            Thread.sleep(200);
+            Thread.sleep(100);
             searchArtists(api, artist);
             count++;
         }
@@ -151,27 +154,22 @@ public class SpotifyConnect {
         artistWriter.close();
     }
 
-    public static void findTopSongs(Api api) throws FileNotFoundException, WebApiException, IOException {
+    public static void findTopSongs(Api api) throws FileNotFoundException, WebApiException, IOException, InterruptedException {
         File file = new File("festival-artists-details.txt");
         Scanner sc = new Scanner(file);
         Map<String, List<Track>> topSongs = new HashMap<String, List<Track>>();
+        System.out.println();
+        System.out.println("Here is a list of songs you should listen: ");
+        System.out.println();
         while(sc.hasNextLine()) {
             String artist = sc.nextLine();
             String[] details = artist.split(":");
             String id = details[0];
             String name = details[1];
+            Thread.sleep(100);
             List<Track> topTracks = listTopSongs(api, id);
             topSongs.put(name, topTracks);
-        }
-
-        System.out.println("Here is a list of songs you should listen: ");
-        for(String artist: topSongs.keySet()) {
-            System.out.print(artist + " Top songs- [");
-            for(Track track: topSongs.get(artist)) {
-                System.out.print(track.getName());
-                System.out.print(", ");
-            }
-            System.out.print("]");
+            displaySongs(name, topTracks);
             System.out.println();
         }
     }
@@ -180,5 +178,15 @@ public class SpotifyConnect {
         final TopTracksRequest topTracksRequest = api.getTopTracksForArtist(artistId, "SE").build();
         final List<Track> trackList = topTracksRequest.get();
         return trackList;
+    }
+
+    public static void displaySongs(String artistName, List<Track> topTracks) {
+        System.out.print(artistName + ": [");
+        for(Track track: topTracks) {
+            System.out.print(track.getName());
+            System.out.print(", ");
+        }
+        System.out.print("]");
+        System.out.println();
     }
 }

@@ -18,17 +18,24 @@ import org.json.simple.parser.ParseException;
 
 public class OCRRestAPI {
 
-    public static void main(String[] args) throws Exception
+    /*public static void main(String[] args) throws Exception
     {
+        connectOCR();
 
+    }*/
+
+    public OCRRestAPI() {
+
+    }
+
+    public void connectOCR(String filename) throws Exception {
         // Provide your user name and license code
         String license_code = "CB9875E4-B618-4E4D-AFD0-4CE68C320C39";
         String user_name =  "AAYUSH19SAXENA";
-
         String ocrURL = "http://www.ocrwebservice.com/restservices/processDocument?gettext=true";
 
         // Full path to uploaded document
-        String filePath = "/Users/aayush.saxena/Documents/workspace/festival-playlist/bumbershoot_2017.jpg";
+        String filePath = "/Users/aayush.saxena/Documents/workspace/festival-playlist/" + filename;
 
         byte[] fileContent = Files.readAllBytes(Paths.get(filePath));
 

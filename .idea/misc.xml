@@ -7,11 +7,6 @@
       </list>
     </option>
   </component>
-  <component name="PerforceDirect.Settings">
-    <option name="pathToExec" value="$PROJECT_DIR$/../../Sonos/tools/p4" />
-    <option name="PATH_TO_P4V" value="/Applications/perforce/p4v.app/Contents/MacOS/p4v" />
-    <option name="USE_PERFORCE_JOBS" value="true" />
-  </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
       <profile-state>
