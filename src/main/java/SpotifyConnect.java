@@ -14,7 +14,7 @@ import com.wrapper.spotify.models.*;
  */
 public class SpotifyConnect {
     public static String CLIENT_ID = "0066307627c2459aaf0370e2c5949dc0";
-    public static String CLIENT_SECRET = "b0800ef8fafa42c9a5b2d6de11a34879";
+    public static String CLIENT_SECRET = "<redacted>";
     public static Set<Artist> artistSet = new HashSet<Artist>();
     public static Set<Track> trackSet = new HashSet<Track>();
 
